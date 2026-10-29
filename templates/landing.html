@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}CourseCompass | Discover Your Next Course{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="eyebrow">Grow your knowledge</div>
+  <h1>Discover courses that <span>shape your future.</span></h1>
+  <p>CourseCompass helps you explore curated online programs, filter by skills and difficulty, save learning paths, and discover related courses through content-based recommendations.</p>
+  <div class="hero-actions">
+    {% if current_user.is_authenticated %}
+      <a class="btn btn-primary" href="{{ url_for('explore') }}">Explore Courses</a>
+      <a class="btn btn-outline" href="{{ url_for('dashboard') }}">My Dashboard</a>
+    {% else %}
+      <a class="btn btn-primary" href="{{ url_for('register') }}">Create Free Account</a>
+      <a class="btn btn-outline" href="{{ url_for('login') }}">Login</a>
+    {% endif %}
+  </div>
+</section>
+
+<section class="stats-grid">
+  <div class="stat-card"><div class="stat-number">{{ total_courses }}</div><div class="stat-label">Curated Courses</div></div>
+  <div class="stat-card"><div class="stat-number">{{ total_universities }}</div><div class="stat-label">Institutions</div></div>
+  <div class="stat-card"><div class="stat-number">{{ total_levels }}</div><div class="stat-label">Difficulty Levels</div></div>
+  <div class="stat-card"><div class="stat-number">TF-IDF</div><div class="stat-label">Recommendation Engine</div></div>
+</section>
+
+<section class="feature-grid">
+  <div class="feature-card"><h3>Personalized discovery</h3><p>Complete a short four-step onboarding quiz and receive course suggestions based on your interests and goals.</p></div>
+  <div class="feature-card"><h3>Smart search and filters</h3><p>Search by topic, skill, or institution, then narrow results by difficulty, rating, and provider.</p></div>
+  <div class="feature-card"><h3>Track your progress</h3><p>Save courses you want to take and mark completed programs in your personal dashboard.</p></div>
+</section>
+{% endblock %}

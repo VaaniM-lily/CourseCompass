@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Onboarding | CourseCompass{% endblock %}
+{% block content %}
+<section class="onboarding">
+  <div class="section-head">
+    <div class="eyebrow">Personalize CourseCompass</div>
+    <h1>Four steps to better recommendations</h1>
+    <p class="muted">Your answers help CourseCompass rank relevant courses using TF-IDF and cosine similarity.</p>
+  </div>
+
+  <form method="POST" class="onboarding-form panel" id="onboardingForm">
+    <div class="quiz-step active" data-step="1">
+      <h2>1. Which areas interest you?</h2>
+      <div class="choice-grid">
+        {% for interest in ['Data Science','Programming','Business','Design','Marketing','AI & Machine Learning','Health','Personal Development','Finance','Cloud Computing'] %}
+          <label class="choice"><input type="checkbox" name="interests" value="{{ interest }}"><span>{{ interest }}</span></label>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="quiz-step" data-step="2">
+      <h2>2. What difficulty suits you?</h2>
+      <div class="choice-grid">
+        {% for level in ['Any','Beginner','Intermediate','Advanced'] %}
+          <label class="choice"><input type="radio" name="preferred_level" value="{{ level }}" {% if level == 'Any' %}checked{% endif %}><span>{{ level }}</span></label>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="quiz-step" data-step="3">
+      <h2>3. Minimum course rating</h2>
+      <div class="choice-grid">
+        {% for value, label in [(0,'Any rating'),(3,'3.0+'),(3.5,'3.5+'),(4,'4.0+'),(4.5,'4.5+')] %}
+          <label class="choice"><input type="radio" name="minimum_rating" value="{{ value }}" {% if value == 0 %}checked{% endif %}><span>{{ label }}</span></label>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="quiz-step" data-step="4">
+      <h2>4. What do you want to achieve?</h2>
+      <textarea name="learning_goal" rows="5" placeholder="For example: I want to learn Python for data analysis and build dashboards."></textarea>
+    </div>
+
+    <div class="quiz-controls">
+      <button type="button" class="btn btn-outline" id="prevStep" disabled>Back</button>
+      <button type="button" class="btn btn-primary" id="nextStep">Next</button>
+      <button type="submit" class="btn btn-primary hidden" id="submitQuiz">Finish Setup</button>
+    </div>
+  </form>
+</section>
+{% endblock %}

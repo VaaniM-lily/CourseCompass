@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}{{ course.title }} | CourseCompass{% endblock %}
+{% block content %}
+<section class="detail-card">
+  <div class="detail-head">
+    <span class="level-pill">{{ course.difficulty }}</span>
+    <h1>{{ course.title }}</h1>
+    <p class="university">{{ course.university or 'Unknown provider' }}</p>
+    <span class="rating">{% if course.rating %}★ {{ '%.1f'|format(course.rating) }} / 5{% else %}Not rated{% endif %}</span>
+  </div>
+
+  <h2>Course overview</h2>
+  <p>{{ course.description or 'No description available.' }}</p>
+
+  <h2>Skills you will learn</h2>
+  <div class="tags">
+    {% if skills %}{% for skill in skills %}<span class="skill-tag">{{ skill }}</span>{% endfor %}
+    {% else %}<span class="muted">Skills not specified</span>{% endif %}
+  </div>
+
+  <div class="detail-actions">
+    {% if course.url %}
+      <a class="btn btn-primary" href="{{ course.url }}" target="_blank" rel="noopener noreferrer">Open Course & Enroll ↗</a>
+    {% else %}<span class="muted">Original course URL unavailable.</span>{% endif %}
+
+    {% if user_course and user_course.status == 'completed' %}
+      <span class="completed-badge">Completed</span>
+    {% elif user_course %}
+      <form method="POST" action="{{ url_for('complete_course', course_id=course.id) }}"><button class="btn btn-outline">Mark Completed</button></form>
+    {% else %}
+      <form method="POST" action="{{ url_for('save_course', course_id=course.id) }}"><button class="btn btn-outline">Save Course</button></form>
+    {% endif %}
+  </div>
+</section>
+
+{% if related %}
+<section>
+  <h2>Similar courses</h2>
+  <div class="course-grid">
+    {% for item in related %}
+      <article class="course-card">
+        <div class="card-body">
+          <div class="card-top">
+            <span class="university">{{ item.course.university }}</span>
+            <span class="match-score">{{ item.score }}% match</span>
+          </div>
+          <h3>{{ item.course.title }}</h3>
+          <a class="btn btn-outline full" href="{{ url_for('course_detail', course_id=item.course.id) }}">View</a>
+        </div>
+      </article>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+{% endblock %}
