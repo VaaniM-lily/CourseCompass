@@ -1,79 +1,243 @@
-{% extends "base.html" %}
-{% block title %}Explore Courses | CourseCompass{% endblock %}
-{% block content %}
+{% extends "base.html" %} {% block title %}Explore Courses | CourseCompass{%
+endblock %} {% block content %}
 <section class="section-head">
   <div class="eyebrow">Course catalog</div>
   <h1>Explore programs</h1>
-  <p class="muted">Search, filter, and discover your next learning milestone.</p>
+  <p class="muted">
+    Search, filter, and discover your next learning milestone.
+  </p>
 </section>
 
 <form method="GET" class="filter-panel">
   <div class="filter-row">
-    <div class="field"><label>Search</label><input type="text" name="query" value="{{ filters.query }}" placeholder="Python, marketing, design..."></div>
-    <div class="field"><label>Difficulty</label>
-      <select name="level"><option value="Any">Any</option>
-      {% for level in levels %}<option value="{{ level }}" {% if filters.level == level %}selected{% endif %}>{{ level }}</option>{% endfor %}
-      </select></div>
-    <div class="field"><label>Institution</label>
-      <select name="university"><option value="Any">Any</option>
-      {% for university in universities %}<option value="{{ university }}" {% if filters.university == university %}selected{% endif %}>{{ university }}</option>{% endfor %}
-      </select></div>
+    <div class="field">
+      <label>Search</label
+      ><input
+        type="text"
+        name="query"
+        value="{{ filters.query }}"
+        placeholder="Python, marketing, design..."
+      />
+    </div>
+    <div class="field">
+      <label>Difficulty</label>
+      <select name="level">
+        <option value="Any">Any</option>
+        {% for level in levels %}
+        <option
+          value="{{ level }}"
+          {%
+          if
+          filters.level=""
+          ="level"
+          %}selected{%
+          endif
+          %}
+        >
+          {{ level }}
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="field">
+      <label>Institution</label>
+      <select name="university">
+        <option value="Any">Any</option>
+        {% for university in universities %}
+        <option
+          value="{{ university }}"
+          {%
+          if
+          filters.university=""
+          ="university"
+          %}selected{%
+          endif
+          %}
+        >
+          {{ university }}
+        </option>
+        {% endfor %}
+      </select>
+    </div>
   </div>
 
   <div class="filter-row">
-    <div class="field"><label>Minimum rating</label>
+    <div class="field">
+      <label>Minimum rating</label>
       <select name="minimum_rating">
-        {% for value, label in [(0,'Any rating'),(3,'3.0+'),(3.5,'3.5+'),(4,'4.0+'),(4.5,'4.5+')] %}
-          <option value="{{ value }}" {% if filters.minimum_rating == value %}selected{% endif %}>{{ label }}</option>
+        {% for value, label in [(0,'Any
+        rating'),(3,'3.0+'),(3.5,'3.5+'),(4,'4.0+'),(4.5,'4.5+')] %}
+        <option
+          value="{{ value }}"
+          {%
+          if
+          filters.minimum_rating=""
+          ="value"
+          %}selected{%
+          endif
+          %}
+        >
+          {{ label }}
+        </option>
         {% endfor %}
-      </select></div>
-    <div class="field"><label>Sort by</label>
+      </select>
+    </div>
+    <div class="field">
+      <label>Sort by</label>
       <select name="sort_by">
-        <option value="recommended" {% if filters.sort_by == 'recommended' %}selected{% endif %}>Recommended</option>
-        <option value="highest" {% if filters.sort_by == 'highest' %}selected{% endif %}>Highest rated</option>
-        <option value="lowest" {% if filters.sort_by == 'lowest' %}selected{% endif %}>Lowest rated</option>
-        <option value="title" {% if filters.sort_by == 'title' %}selected{% endif %}>Title A–Z</option>
-      </select></div>
-    <div class="field"><label>Per page</label>
-      <select name="per_page">{% for size in [9,12,18,24] %}<option value="{{ size }}" {% if filters.per_page == size %}selected{% endif %}>{{ size }}</option>{% endfor %}</select></div>
+        <option
+          value="recommended"
+          {%
+          if
+          filters.sort_by=""
+          ="recommended"
+          %}selected{%
+          endif
+          %}
+        >
+          Recommended
+        </option>
+        <option
+          value="highest"
+          {%
+          if
+          filters.sort_by=""
+          ="highest"
+          %}selected{%
+          endif
+          %}
+        >
+          Highest rated
+        </option>
+        <option
+          value="lowest"
+          {%
+          if
+          filters.sort_by=""
+          ="lowest"
+          %}selected{%
+          endif
+          %}
+        >
+          Lowest rated
+        </option>
+        <option
+          value="title"
+          {%
+          if
+          filters.sort_by=""
+          ="title"
+          %}selected{%
+          endif
+          %}
+        >
+          Title A–Z
+        </option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Per page</label>
+      <select name="per_page">
+        {% for size in [9,12,18,24] %}
+        <option
+          value="{{ size }}"
+          {%
+          if
+          filters.per_page=""
+          ="size"
+          %}selected{%
+          endif
+          %}
+        >
+          {{ size }}
+        </option>
+        {% endfor %}
+      </select>
+    </div>
     <button class="btn btn-primary" type="submit">Apply Filters</button>
     <a class="btn btn-outline" href="{{ url_for('explore') }}">Reset</a>
   </div>
 </form>
 
-<p class="result-count">{{ pagination.total }} matching courses · Page {{ pagination.page }} of {{ pagination.pages }}</p>
+<p class="result-count">
+  {{ pagination.total }} matching courses · Page {{ pagination.page }} of {{
+  pagination.pages }}
+</p>
 
 {% if pagination.items %}
-  <div class="course-grid">
-    {% for course in pagination.items %}
-      <article class="course-card">
-        <div class="card-body">
-          <div class="card-top">
-            <span class="university">{{ course.university or 'Unknown provider' }}</span>
-            <span class="rating">{% if course.rating %}★ {{ '%.1f'|format(course.rating) }}{% else %}Not rated{% endif %}</span>
-          </div>
-          <h3>{{ course.title }}</h3>
-          <span class="level-pill">{{ course.difficulty }}</span>
-          <p class="description">{{ course.description[:150] }}{% if course.description|length > 150 %}...{% endif %}</p>
-          <div class="card-actions">
-            <a class="btn btn-outline" href="{{ url_for('course_detail', course_id=course.id) }}">Details</a>
-            {% if course.url %}<a class="btn btn-primary" href="{{ course.url }}" target="_blank" rel="noopener noreferrer">Enroll ↗</a>{% endif %}
-          </div>
-          {% if course.id in saved_ids %}
-            <form method="POST" action="{{ url_for('remove_course', course_id=course.id) }}"><button class="link-button">Remove from dashboard</button></form>
-          {% else %}
-            <form method="POST" action="{{ url_for('save_course', course_id=course.id) }}"><button class="link-button">Save for later</button></form>
-          {% endif %}
-        </div>
-      </article>
-    {% endfor %}
-  </div>
+<div class="course-grid">
+  {% for course in pagination.items %}
+  <article class="course-card">
+    <div class="course-cover">
+      <img
+        src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&auto=format&fit=crop&q=80"
+        alt="Course cover"
+      />
+      <span class="cover-level">{{ course.difficulty }}</span>
+    </div>
+    <div class="card-body">
+      <div class="card-top">
+        <span class="university"
+          >{{ course.university or 'Unknown provider' }}</span
+        >
+        <span class="rating"
+          >{% if course.rating %}★ {{ '%.1f'|format(course.rating) }}{% else
+          %}Not rated{% endif %}</span
+        >
+      </div>
+      <h3>{{ course.title }}</h3>
+      <p class="description">
+        {{ course.description[:150] }}{% if course.description|length > 150
+        %}...{% endif %}
+      </p>
+      <div class="card-actions">
+        <a
+          class="btn btn-outline"
+          href="{{ url_for('course_detail', course_id=course.id) }}"
+          >Details</a
+        >
+        {% if course.url %}<a
+          class="btn btn-primary"
+          href="{{ course.url }}"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Enroll ↗</a
+        >{% endif %}
+      </div>
+      {% if course.id in saved_ids %}
+      <form
+        method="POST"
+        action="{{ url_for('remove_course', course_id=course.id) }}"
+      >
+        <button class="link-button">Remove from dashboard</button>
+      </form>
+      {% else %}
+      <form
+        method="POST"
+        action="{{ url_for('save_course', course_id=course.id) }}"
+      >
+        <button class="link-button">Save for later</button>
+      </form>
+      {% endif %}
+    </div>
+  </article>
+  {% endfor %}
+</div>
 
-  <div class="pagination">
-    {% if pagination.has_prev %}<a class="btn btn-outline" href="{{ url_for('explore', page=pagination.prev_num, **filters) }}">Previous</a>{% endif %}
-    {% if pagination.has_next %}<a class="btn btn-outline" href="{{ url_for('explore', page=pagination.next_num, **filters) }}">Next</a>{% endif %}
-  </div>
+<div class="pagination">
+  {% if pagination.has_prev %}<a
+    class="btn btn-outline"
+    href="{{ url_for('explore', page=pagination.prev_num, **filters) }}"
+    >Previous</a
+  >{% endif %} {% if pagination.has_next %}<a
+    class="btn btn-outline"
+    href="{{ url_for('explore', page=pagination.next_num, **filters) }}"
+    >Next</a
+  >{% endif %}
+</div>
 {% else %}
-  <div class="empty-state"><h3>No courses found</h3><p>Try changing your search keywords or relaxing the filters.</p></div>
-{% endif %}
-{% endblock %}
+<div class="empty-state">
+  <h3>No courses found</h3>
+  <p>Try changing your search keywords or relaxing the filters.</p>
+</div>
+{% endif %} {% endblock %}
